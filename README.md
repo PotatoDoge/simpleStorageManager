@@ -3,3 +3,4 @@ GUI made with SceneBuilder
 ----------------------------------
 If you use this, make sure to add the mysql.jar file to the project's path. 
 ----------------------------------
+IGNORE THE OUT FOLDER
