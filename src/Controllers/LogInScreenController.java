@@ -2,15 +2,20 @@ package Controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 
+import java.io.IOException;
 import java.sql.*;
 
 public class LogInScreenController {
 
+    @FXML
+    private AnchorPane logInPane;
     @FXML
     private Button logInButton;
     @FXML
@@ -66,6 +71,13 @@ public class LogInScreenController {
                 System.out.println(e);
             }
         }
+        if(allowLogIn){
+            try {
+                changeStage();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -77,5 +89,10 @@ public class LogInScreenController {
         alert.setHeaderText(header);
         alert.setContentText(text);
         alert.showAndWait();
+    }
+
+    public void changeStage() throws IOException {
+        AnchorPane pane = FXMLLoader.load(getClass().getResource("/GUI/MainMenu.fxml"));
+        logInPane.getChildren().setAll(pane);
     }
 }
