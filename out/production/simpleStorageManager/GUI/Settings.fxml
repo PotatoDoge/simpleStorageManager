@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="settingsPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="503.0" prefWidth="875.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SettingsController">
+   <children>
+      <MenuBar prefHeight="29.0" prefWidth="354.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Add User">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#addOnAction" text="Add" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Delete User">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Show Users">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#showUsersOnAction" text="Show" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Return">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#returnOnAction" text="Return" />
+              </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+      <TableView fx:id="usersTable" layoutX="42.0" layoutY="52.0" prefHeight="402.0" prefWidth="402.0" visible="false">
+        <columns>
+          <TableColumn fx:id="userColumn" editable="false" prefWidth="201.0" sortable="false" text="User" />
+          <TableColumn fx:id="positionColumn" editable="false" prefWidth="201.0" sortable="false" text="Position" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

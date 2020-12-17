@@ -53,7 +53,7 @@ public class LogInScreenController {
             try{
                 conn = DriverManager.getConnection(DB_URL, USER, PASS);
                 stmt = conn.createStatement();
-                String SQL = "SELECT * FROM admins WHERE user='" + usernameTextArea.getText() + "'";
+                String SQL = "SELECT * FROM users WHERE user='" + usernameTextArea.getText() + "'";
                 pst = conn.prepareStatement(SQL);
                 ResultSet rs = pst.executeQuery();
                 if(rs.next()) {
@@ -61,6 +61,7 @@ public class LogInScreenController {
                         System.out.println("Log In successful");
                         String name = usernameTextArea.getText();
                         user.setName(name);
+                        user.setPass(pass);
                         allowLogIn = true;
                     }
                     else {

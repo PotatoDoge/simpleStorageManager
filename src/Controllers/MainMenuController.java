@@ -32,8 +32,9 @@ public class MainMenuController implements Initializable {
         changeStage("/GUI/LogInScreen.fxml");
     }
 
-    public void settingsOnAction(ActionEvent actionEvent) {
+    public void settingsOnAction(ActionEvent actionEvent) throws IOException {
         System.out.println("SETTINGS BUTTON PRESSED");
+        changeStage("/GUI/Settings.fxml");
     }
 
     public void accountingOnAction(ActionEvent actionEvent) {
