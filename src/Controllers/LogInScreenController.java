@@ -1,5 +1,6 @@
 package Controllers;
 
+import Users.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,6 +38,8 @@ public class LogInScreenController {
 
     private boolean allowLogIn = false;
 
+    static User user = new User();
+
     /**
      * Method that checks with the DB if the user and password inputted are correct.
      * @param event button clicked
@@ -56,6 +59,8 @@ public class LogInScreenController {
                 if(rs.next()) {
                     if (pass.equals(rs.getString("password"))) {
                         System.out.println("Log In successful");
+                        String name = usernameTextArea.getText();
+                        user.setName(name);
                         allowLogIn = true;
                     }
                     else {
