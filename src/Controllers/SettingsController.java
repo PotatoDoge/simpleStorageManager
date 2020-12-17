@@ -39,6 +39,7 @@ public class SettingsController {
     }
 
     public void showUsersOnAction(ActionEvent actionEvent) {
+        usersTable.getItems().clear();
         usersTable.setVisible(true);
         try {
             Connection conn = DriverManager.getConnection(LogInScreenController.DB_URL, LogInScreenController.USER, LogInScreenController.PASS);
