@@ -17,6 +17,10 @@ import java.sql.*;
 public class SettingsController {
 
     @FXML
+    private ComboBox <String> positionComboBox;
+
+    private final ObservableList<String> positions = FXCollections.observableArrayList("Admin","Human Resources","Storage","Accounting");
+    @FXML
     private Button addButton;
     @FXML
     private TextField newUserTextField;
@@ -57,6 +61,9 @@ public class SettingsController {
         loggedUserTextArea.setVisible(true);
         loggedPasswordTextArea.setVisible(true);
         addButton.setVisible(true);
+        positionComboBox.setVisible(true);
+        positionComboBox.setItems(positions);
+
     }
 
     public void returnOnAction(ActionEvent actionEvent) throws IOException {
@@ -89,7 +96,11 @@ public class SettingsController {
         settingsPane.getChildren().setAll(pane);
     }
 
+    /**
+     * Method that makes sure that every object in the screen gets cleared and hidden
+     */
     public void hideItems(){
+        positionComboBox.setVisible(false);
         newUserTextField.setVisible(false);
         newPasswordTextField.setVisible(false);
         loggedUserTextArea.setVisible(false);
@@ -97,6 +108,11 @@ public class SettingsController {
         usersTable.getItems().clear();
         usersTable.setVisible(false);
         addButton.setVisible(false);
+        newPasswordTextField.clear();
+        newUserTextField.clear();
+        loggedPasswordTextArea.clear();
+        loggedUserTextArea.clear();
+        positionComboBox.setItems(null);
 
     }
 
@@ -136,18 +152,45 @@ public class SettingsController {
         else if(!loggedUserTextArea.getText().equals(LogInScreenController.user.getName()) || !loggedPasswordTextArea.getText().equals(LogInScreenController.user.getPass())){
             popUpMessage("Not a valid user/password","The logged username or password\nis not correct.");
         }
+        else if(!checkIfUsernameInDB(newUserTextField.getText())){
+            popUpMessage("Not a valid username","That username already exists.\nChoose a different one.");
+        }
+        else if(positionComboBox.getValue() == null){
+            popUpMessage("Not a valid position","Select a valid position");
+        }
         else{
             try{
                 conn = DriverManager.getConnection(DB_URL, USER, PASS);
                 stmt = conn.createStatement();
-                int insertUser = stmt.executeUpdate("INSERT INTO users (user,password) VALUES('"+newUserTextField.getText()+"','"+newPasswordTextField.getText()+"')");
-                System.out.println("insert user");
-                //int insertPass = stmt.executeUpdate("INSERT INTO users (password) VALUES('"+newPasswordTextField.getText()+"')");
+                int insertUser = stmt.executeUpdate("INSERT INTO users (user,password,position) VALUES('"+newUserTextField.getText()+"','"+newPasswordTextField.getText()+"','"+positionComboBox.getValue()+"')");
                 System.out.println("Inserted successfully");
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 System.out.println(e);
             }
         }
+    }
+
+    public boolean checkIfUsernameInDB(String usr){
+        try{
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            stmt = conn.createStatement();
+            String SQL = "SELECT * FROM users WHERE user='" + usr + "'";
+            pst = conn.prepareStatement(SQL);
+            ResultSet rs = pst.executeQuery();
+            if(rs.next()){
+                if(newUserTextField.getText().equals(rs.getString("user"))){
+                    return false;
+                }
+            }
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+        return true;
+    }
+
+    public void positionOnAction(ActionEvent actionEvent) {
 
     }
 }
