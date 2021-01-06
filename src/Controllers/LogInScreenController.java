@@ -62,6 +62,7 @@ public class LogInScreenController {
                         String name = usernameTextArea.getText();
                         user.setName(name);
                         user.setPass(pass);
+                        user.setPosition(rs.getString("position"));
                         allowLogIn = true;
                     }
                     else {

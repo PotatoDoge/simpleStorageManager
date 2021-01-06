@@ -21,7 +21,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Delete User">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+                  <MenuItem mnemonicParsing="false" onAction="#deleteOnAction" text="Delete" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Show Users">
@@ -47,6 +47,8 @@
       <TextField fx:id="loggedPasswordTextArea" layoutX="72.0" layoutY="275.0" promptText="Logged Password" visible="false" />
       <TextField fx:id="loggedUserTextArea" layoutX="72.0" layoutY="211.0" promptText="Logged User" visible="false" />
       <Button fx:id="addButton" layoutX="123.0" layoutY="349.0" mnemonicParsing="false" onAction="#addButtonAction" prefHeight="26.0" prefWidth="69.0" text="Add" visible="false" />
-      <ComboBox fx:id="positionComboBox" layoutX="304.0" layoutY="85.0" onAction="#positionOnAction" prefWidth="150.0" promptText="Position" visible="false" />
+      <ComboBox fx:id="positionComboBox" layoutX="304.0" layoutY="85.0" prefWidth="150.0" promptText="Position" visible="false" />
+      <TextField fx:id="userToBeDeleted" focusTraversable="false" layoutX="72.0" layoutY="146.0" promptText="User to be deleted" visible="false" />
+      <Button fx:id="deleteButton" layoutX="127.0" layoutY="349.0" mnemonicParsing="false" onAction="#deleteButtonAction" text="Delete" visible="false" />
    </children>
 </AnchorPane>

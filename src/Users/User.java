@@ -3,6 +3,7 @@ package Users;
 public class User {
     private String name;
     private String pass;
+    private String position;
 
     public User(){
     }
@@ -21,5 +22,13 @@ public class User {
 
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 }

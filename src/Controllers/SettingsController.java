@@ -16,10 +16,13 @@ import java.sql.*;
 
 public class SettingsController {
 
+    private final ObservableList<String> positions = FXCollections.observableArrayList("Admin","Human Resources","Storage","Accounting");
+    @FXML
+    private Button deleteButton;
+    @FXML
+    private TextField userToBeDeleted;
     @FXML
     private ComboBox <String> positionComboBox;
-
-    private final ObservableList<String> positions = FXCollections.observableArrayList("Admin","Human Resources","Storage","Accounting");
     @FXML
     private Button addButton;
     @FXML
@@ -39,10 +42,13 @@ public class SettingsController {
     @FXML
     private AnchorPane settingsPane;
 
+    //Database's local URL
     static final String DB_URL = "jdbc:mysql://localhost/StorageManager?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 
+    //User that accesses the Database
     static final String USER = "root";
 
+    //Database's password
     static final String PASS = "";
 
     static Statement stmt = null;
@@ -56,13 +62,21 @@ public class SettingsController {
     public void addOnAction(ActionEvent actionEvent) {
         System.out.println("ADD PRESSED");
         hideItems();
-        newUserTextField.setVisible(true);
-        newPasswordTextField.setVisible(true);
-        loggedUserTextArea.setVisible(true);
-        loggedPasswordTextArea.setVisible(true);
-        addButton.setVisible(true);
-        positionComboBox.setVisible(true);
-        positionComboBox.setItems(positions);
+        loggedUserTextArea.setFocusTraversable(false);
+        loggedPasswordTextArea.setFocusTraversable(false);
+        if(LogInScreenController.user.getPosition().equals("Admin")){
+            newUserTextField.setVisible(true);
+            newPasswordTextField.setVisible(true);
+            loggedUserTextArea.setVisible(true);
+            loggedPasswordTextArea.setVisible(true);
+            addButton.setVisible(true);
+            positionComboBox.setVisible(true);
+            positionComboBox.setItems(positions);
+        }
+        else{
+            popUpMessage("Not a valid position","Only Admins can add a\nnew user to the system.");
+        }
+
 
     }
 
@@ -81,6 +95,7 @@ public class SettingsController {
             while(rs.next()){
                 oblist.add(new Table(rs.getString("user"),rs.getString("position")));
             }
+            conn.close();
         }
         catch (Exception e){
             System.out.println(e);
@@ -91,6 +106,11 @@ public class SettingsController {
 
     }
 
+    /**
+     * Method that changes stage
+     * @param nextStage nextStage
+     * @throws IOException exception
+     */
     public void changeStage(String nextStage) throws IOException {
         AnchorPane pane = FXMLLoader.load(getClass().getResource(nextStage));
         settingsPane.getChildren().setAll(pane);
@@ -101,21 +121,37 @@ public class SettingsController {
      */
     public void hideItems(){
         positionComboBox.setVisible(false);
+        positionComboBox.setItems(null);
+        positionComboBox.setFocusTraversable(false);
         newUserTextField.setVisible(false);
+        newUserTextField.clear();
+        newUserTextField.setFocusTraversable(false);
         newPasswordTextField.setVisible(false);
+        newPasswordTextField.clear();
+        newPasswordTextField.setFocusTraversable(false);
         loggedUserTextArea.setVisible(false);
+        loggedUserTextArea.clear();
+        loggedUserTextArea.setFocusTraversable(false);
         loggedPasswordTextArea.setVisible(false);
+        loggedPasswordTextArea.clear();
+        loggedPasswordTextArea.setFocusTraversable(false);
         usersTable.getItems().clear();
         usersTable.setVisible(false);
+        userToBeDeleted.setFocusTraversable(false);
         addButton.setVisible(false);
-        newPasswordTextField.clear();
-        newUserTextField.clear();
-        loggedPasswordTextArea.clear();
-        loggedUserTextArea.clear();
-        positionComboBox.setItems(null);
-
+        addButton.setFocusTraversable(false);
+        deleteButton.setVisible(false);
+        deleteButton.setFocusTraversable(false);
+        userToBeDeleted.setVisible(false);
+        userToBeDeleted.clear();
+        userToBeDeleted.setFocusTraversable(false);
     }
 
+    /**
+     * Method that allows messages/warning to pop up in the screen
+     * @param header header
+     * @param text body text
+     */
     public void popUpMessage(String header, String text){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("");
@@ -133,27 +169,30 @@ public class SettingsController {
         char[] charArray = str.toCharArray();
         for (char c : charArray) {
             if (!Character.isLetterOrDigit(c))
-                return false;
+                return true;
         }
-        return true;
+        return false;
     }
 
-
-    public void addButtonAction(ActionEvent actionEvent) throws IOException{
+    /**
+     * Method that manages the logic of adding a new user
+     * @throws IOException exception
+     */
+    public void addButtonAction() throws IOException{
         if(newUserTextField.getText().isEmpty() || newPasswordTextField.getText().isEmpty() || loggedUserTextArea.getText().isEmpty() || loggedPasswordTextArea.getText().isEmpty()){
             popUpMessage("Fill everything","All fields must be filled to proceed");
         }
         else if(newUserTextField.getText().length() > 25 || newPasswordTextField.getText().length() > 25){
             popUpMessage("Username or password too long","Neither the username nor the\npassword can exceed 25 characters");
         }
-        else if(!isAlphanumeric(newUserTextField.getText()) || !isAlphanumeric(newPasswordTextField.getText())){
+        else if(isAlphanumeric(newUserTextField.getText()) || isAlphanumeric(newPasswordTextField.getText())){
             popUpMessage("Not a valid character","Both the user and password must only\ncontain alpha numeric values");
         }
         else if(!loggedUserTextArea.getText().equals(LogInScreenController.user.getName()) || !loggedPasswordTextArea.getText().equals(LogInScreenController.user.getPass())){
             popUpMessage("Not a valid user/password","The logged username or password\nis not correct.");
         }
         else if(!checkIfUsernameInDB(newUserTextField.getText())){
-            popUpMessage("Not a valid username","That username already exists.\nChoose a different one.");
+            popUpMessage("Not a valid username","That username already exists.\nChoose exit;a different one.");
         }
         else if(positionComboBox.getValue() == null){
             popUpMessage("Not a valid position","Select a valid position");
@@ -164,13 +203,26 @@ public class SettingsController {
                 stmt = conn.createStatement();
                 int insertUser = stmt.executeUpdate("INSERT INTO users (user,password,position) VALUES('"+newUserTextField.getText()+"','"+newPasswordTextField.getText()+"','"+positionComboBox.getValue()+"')");
                 System.out.println("Inserted successfully");
+                popUpMessage("Successful!","User added successfully!");
+                positionComboBox.setValue(null);
+                newUserTextField.clear();
+                newPasswordTextField.clear();
+                loggedUserTextArea.clear();
+                loggedPasswordTextArea.clear();
+                conn.close();
             }
             catch (Exception e) {
                 System.out.println(e);
             }
         }
+
     }
 
+    /**
+     * Method that checks if the username is already registered in the DB
+     * @param usr username
+     * @return boolean
+     */
     public boolean checkIfUsernameInDB(String usr){
         try{
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -190,7 +242,50 @@ public class SettingsController {
         return true;
     }
 
-    public void positionOnAction(ActionEvent actionEvent) {
+    public void deleteOnAction(ActionEvent actionEvent) {
+        hideItems();
+        System.out.println("DELETE PRESSED");
+        if(LogInScreenController.user.getPosition().equals("Admin")){
+            userToBeDeleted.setVisible(true);
+            loggedUserTextArea.setVisible(true);
+            loggedPasswordTextArea.setVisible(true);
+            deleteButton.setVisible(true);
+        }
+        else{
+            popUpMessage("Not a valid position","Only Admins can delete a\nnew user from the system.");
+        }
 
+    }
+
+    public void deleteButtonAction(){
+        try{
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            stmt = conn.createStatement();
+            String SQL = "SELECT * FROM users WHERE user='" + userToBeDeleted.getText() + "'";
+            pst = conn.prepareStatement(SQL);
+            ResultSet rs = pst.executeQuery();
+            if(rs.next()) {
+                if (userToBeDeleted.getText().equals(rs.getString("user"))) {
+                    if(!loggedUserTextArea.getText().equals(LogInScreenController.user.getName()) || !loggedPasswordTextArea.getText().equals(LogInScreenController.user.getPass())){
+                        popUpMessage("Not a valid user/password","The logged username or password\nis not correct.");
+                    }
+                    else{
+                        int deleteUser = stmt.executeUpdate("DELETE FROM users WHERE user='"+userToBeDeleted.getText()+"'");
+                        System.out.println("User deleted");
+                        popUpMessage("User deleted","The user was deleted successfully");
+                        loggedPasswordTextArea.clear();
+                        loggedUserTextArea.clear();
+                        userToBeDeleted.clear();
+                    }
+                }
+            }
+            else{
+                popUpMessage("Username or password doesn't exist","The provided username or password is not correct");
+            }
+            conn.close();
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
     }
 }
