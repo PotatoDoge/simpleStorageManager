@@ -3,13 +3,11 @@ package Controllers;
 import Users.Table;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-
 
 import java.io.IOException;
 import java.sql.*;
@@ -17,6 +15,11 @@ import java.sql.*;
 public class SettingsController {
 
     private final ObservableList<String> positions = FXCollections.observableArrayList("Admin","Human Resources","Storage","Accounting");
+
+    @FXML
+    private PasswordField loggedPasswordTextAreaDelete;
+    @FXML
+    private TextField loggedUserTextAreaDelete;
     @FXML
     private Button deleteButton;
     @FXML
@@ -30,7 +33,7 @@ public class SettingsController {
     @FXML
     private TextField newPasswordTextField;
     @FXML
-    private TextField loggedPasswordTextArea;
+    private PasswordField loggedPasswordTextArea;
     @FXML
     private TextField loggedUserTextArea;
     @FXML
@@ -59,16 +62,16 @@ public class SettingsController {
 
     ObservableList<Table> oblist = FXCollections.observableArrayList();
 
-    public void addOnAction(ActionEvent actionEvent) {
+    public void addOnAction() {
         System.out.println("ADD PRESSED");
         hideItems();
-        loggedUserTextArea.setFocusTraversable(false);
-        loggedPasswordTextArea.setFocusTraversable(false);
         if(LogInScreenController.user.getPosition().equals("Admin")){
             newUserTextField.setVisible(true);
             newPasswordTextField.setVisible(true);
             loggedUserTextArea.setVisible(true);
             loggedPasswordTextArea.setVisible(true);
+            loggedUserTextArea.setFocusTraversable(false);
+            loggedPasswordTextArea.setFocusTraversable(false);
             addButton.setVisible(true);
             positionComboBox.setVisible(true);
             positionComboBox.setItems(positions);
@@ -80,11 +83,54 @@ public class SettingsController {
 
     }
 
-    public void returnOnAction(ActionEvent actionEvent) throws IOException {
+    /**
+     * Method that manages the logic of adding a new user
+     */
+    public void addButtonAction(){
+        if(newUserTextField.getText().isEmpty() || newPasswordTextField.getText().isEmpty() || loggedUserTextArea.getText().isEmpty() || loggedPasswordTextArea.getText().isEmpty()){
+            popUpMessage("Fill everything","All fields must be filled to proceed");
+        }
+        else if(newUserTextField.getText().length() > 25 || newPasswordTextField.getText().length() > 25){
+            popUpMessage("Username or password too long","Neither the username nor the\npassword can exceed 25 characters");
+        }
+        else if(isAlphanumeric(newUserTextField.getText()) || isAlphanumeric(newPasswordTextField.getText())){
+            popUpMessage("Not a valid character","Both the user and password must only\ncontain alpha numeric values");
+        }
+        else if(!loggedUserTextArea.getText().equals(LogInScreenController.user.getName()) || !loggedPasswordTextArea.getText().equals(LogInScreenController.user.getPass())){
+            popUpMessage("Not a valid user/password","The logged username or password\nis not correct.");
+        }
+        else if(!checkIfUsernameInDB(newUserTextField.getText())){
+            popUpMessage("Not a valid username","That username already exists.\nChoose exit;a different one.");
+        }
+        else if(positionComboBox.getValue() == null){
+            popUpMessage("Not a valid position","Select a valid position");
+        }
+        else{
+            try{
+                conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                stmt = conn.createStatement();
+                int insertUser = stmt.executeUpdate("INSERT INTO users (user,password,position) VALUES('"+newUserTextField.getText()+"','"+newPasswordTextField.getText()+"','"+positionComboBox.getValue()+"')");
+                System.out.println("Inserted successfully");
+                popUpMessage("Successful!","User added successfully!");
+                positionComboBox.setValue(null);
+                newUserTextField.clear();
+                newPasswordTextField.clear();
+                loggedUserTextArea.clear();
+                loggedPasswordTextArea.clear();
+                conn.close();
+            }
+            catch (Exception e) {
+                System.out.println("Error: "+e);
+            }
+        }
+
+    }
+
+    public void returnOnAction() throws IOException {
         changeStage("/GUI/MainMenu.fxml");
     }
 
-    public void showUsersOnAction(ActionEvent actionEvent) {
+    public void showUsersOnAction() {
         hideItems();
         usersTable.getItems().clear();
         usersTable.setVisible(true);
@@ -98,7 +144,7 @@ public class SettingsController {
             conn.close();
         }
         catch (Exception e){
-            System.out.println(e);
+            System.out.println("Error: "+e);
         }
         userColumn.setCellValueFactory(new PropertyValueFactory<>("user"));
         positionColumn.setCellValueFactory(new PropertyValueFactory<>("position"));
@@ -145,6 +191,12 @@ public class SettingsController {
         userToBeDeleted.setVisible(false);
         userToBeDeleted.clear();
         userToBeDeleted.setFocusTraversable(false);
+        loggedUserTextAreaDelete.setVisible(false);
+        loggedUserTextAreaDelete.clear();
+        loggedUserTextAreaDelete.setFocusTraversable(false);
+        loggedPasswordTextAreaDelete.clear();
+        loggedPasswordTextAreaDelete.setVisible(false);
+        loggedPasswordTextAreaDelete.setFocusTraversable(false);
     }
 
     /**
@@ -163,7 +215,7 @@ public class SettingsController {
     /**
      * Method that checks if the given string contains non alpha numeric values
      * @param str string
-     * @return true if no non alpha numeric values were found
+     * @return true if no non-alpha numeric values were found
      */
     public boolean isAlphanumeric(String str) {
         char[] charArray = str.toCharArray();
@@ -172,50 +224,6 @@ public class SettingsController {
                 return true;
         }
         return false;
-    }
-
-    /**
-     * Method that manages the logic of adding a new user
-     * @throws IOException exception
-     */
-    public void addButtonAction() throws IOException{
-        if(newUserTextField.getText().isEmpty() || newPasswordTextField.getText().isEmpty() || loggedUserTextArea.getText().isEmpty() || loggedPasswordTextArea.getText().isEmpty()){
-            popUpMessage("Fill everything","All fields must be filled to proceed");
-        }
-        else if(newUserTextField.getText().length() > 25 || newPasswordTextField.getText().length() > 25){
-            popUpMessage("Username or password too long","Neither the username nor the\npassword can exceed 25 characters");
-        }
-        else if(isAlphanumeric(newUserTextField.getText()) || isAlphanumeric(newPasswordTextField.getText())){
-            popUpMessage("Not a valid character","Both the user and password must only\ncontain alpha numeric values");
-        }
-        else if(!loggedUserTextArea.getText().equals(LogInScreenController.user.getName()) || !loggedPasswordTextArea.getText().equals(LogInScreenController.user.getPass())){
-            popUpMessage("Not a valid user/password","The logged username or password\nis not correct.");
-        }
-        else if(!checkIfUsernameInDB(newUserTextField.getText())){
-            popUpMessage("Not a valid username","That username already exists.\nChoose exit;a different one.");
-        }
-        else if(positionComboBox.getValue() == null){
-            popUpMessage("Not a valid position","Select a valid position");
-        }
-        else{
-            try{
-                conn = DriverManager.getConnection(DB_URL, USER, PASS);
-                stmt = conn.createStatement();
-                int insertUser = stmt.executeUpdate("INSERT INTO users (user,password,position) VALUES('"+newUserTextField.getText()+"','"+newPasswordTextField.getText()+"','"+positionComboBox.getValue()+"')");
-                System.out.println("Inserted successfully");
-                popUpMessage("Successful!","User added successfully!");
-                positionComboBox.setValue(null);
-                newUserTextField.clear();
-                newPasswordTextField.clear();
-                loggedUserTextArea.clear();
-                loggedPasswordTextArea.clear();
-                conn.close();
-            }
-            catch (Exception e) {
-                System.out.println(e);
-            }
-        }
-
     }
 
     /**
@@ -237,18 +245,20 @@ public class SettingsController {
             }
         }
         catch (Exception e){
-            System.out.println(e);
+            System.out.println("Error: "+e);
         }
         return true;
     }
 
-    public void deleteOnAction(ActionEvent actionEvent) {
+    public void deleteOnAction() {
         hideItems();
+        loggedUserTextArea.setFocusTraversable(false);
+        loggedPasswordTextArea.setFocusTraversable(false);
         System.out.println("DELETE PRESSED");
         if(LogInScreenController.user.getPosition().equals("Admin")){
             userToBeDeleted.setVisible(true);
-            loggedUserTextArea.setVisible(true);
-            loggedPasswordTextArea.setVisible(true);
+            loggedUserTextAreaDelete.setVisible(true);
+            loggedPasswordTextAreaDelete.setVisible(true);
             deleteButton.setVisible(true);
         }
         else{
@@ -266,16 +276,20 @@ public class SettingsController {
             ResultSet rs = pst.executeQuery();
             if(rs.next()) {
                 if (userToBeDeleted.getText().equals(rs.getString("user"))) {
-                    if(!loggedUserTextArea.getText().equals(LogInScreenController.user.getName()) || !loggedPasswordTextArea.getText().equals(LogInScreenController.user.getPass())){
+                    if(!loggedUserTextAreaDelete.getText().equals(LogInScreenController.user.getName()) || !loggedPasswordTextAreaDelete.getText().equals(LogInScreenController.user.getPass())){
                         popUpMessage("Not a valid user/password","The logged username or password\nis not correct.");
                     }
                     else{
                         int deleteUser = stmt.executeUpdate("DELETE FROM users WHERE user='"+userToBeDeleted.getText()+"'");
                         System.out.println("User deleted");
                         popUpMessage("User deleted","The user was deleted successfully");
-                        loggedPasswordTextArea.clear();
-                        loggedUserTextArea.clear();
+                        loggedPasswordTextAreaDelete.clear();
+                        loggedPasswordTextAreaDelete.setFocusTraversable(false);
+                        loggedUserTextAreaDelete.clear();
+                        loggedUserTextAreaDelete.setFocusTraversable(false);
                         userToBeDeleted.clear();
+                        userToBeDeleted.setFocusTraversable(false);
+                        deleteButton.setFocusTraversable(false);
                     }
                 }
             }
@@ -285,7 +299,11 @@ public class SettingsController {
             conn.close();
         }
         catch (Exception e){
-            System.out.println(e);
+            System.out.println("Error: "+e);
         }
+    }
+
+    public void exchangeRateOnAction() {
+        System.out.println("EXCHANGE PRESSED");
     }
 }

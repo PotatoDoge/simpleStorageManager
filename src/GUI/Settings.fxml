@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -12,7 +13,7 @@
 
 <AnchorPane fx:id="settingsPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="503.0" prefWidth="875.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SettingsController">
    <children>
-      <MenuBar prefHeight="29.0" prefWidth="354.0">
+      <MenuBar prefHeight="29.0" prefWidth="473.0">
         <menus>
           <Menu mnemonicParsing="false" text="Add User">
             <items>
@@ -29,6 +30,11 @@
               <MenuItem mnemonicParsing="false" onAction="#showUsersOnAction" text="Show" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Exchange Rate">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#exchangeRateOnAction" text="Exchange Rate" />
+              </items>
+            </Menu>
             <Menu mnemonicParsing="false" text="Return">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#returnOnAction" text="Return" />
@@ -44,8 +50,10 @@
       </TableView>
       <TextField fx:id="newUserTextField" layoutX="72.0" layoutY="85.0" promptText="New User" visible="false" />
       <TextField fx:id="newPasswordTextField" layoutX="72.0" layoutY="146.0" promptText="New Password" visible="false" />
-      <TextField fx:id="loggedPasswordTextArea" layoutX="72.0" layoutY="275.0" promptText="Logged Password" visible="false" />
-      <TextField fx:id="loggedUserTextArea" layoutX="72.0" layoutY="211.0" promptText="Logged User" visible="false" />
+      <PasswordField fx:id="loggedPasswordTextArea" layoutX="72.0" layoutY="275.0" promptText="Logged Password" visible="false" />
+       <TextField fx:id="loggedUserTextArea" layoutX="72.0" layoutY="211.0" promptText="Logged User" visible="false" />
+       <PasswordField fx:id="loggedPasswordTextAreaDelete" layoutX="72.0" layoutY="275.0" promptText="Logged Password" visible="false" />
+       <TextField fx:id="loggedUserTextAreaDelete" layoutX="72.0" layoutY="211.0" promptText="Logged User" visible="false" />
       <Button fx:id="addButton" layoutX="123.0" layoutY="349.0" mnemonicParsing="false" onAction="#addButtonAction" prefHeight="26.0" prefWidth="69.0" text="Add" visible="false" />
       <ComboBox fx:id="positionComboBox" layoutX="304.0" layoutY="85.0" prefWidth="150.0" promptText="Position" visible="false" />
       <TextField fx:id="userToBeDeleted" focusTraversable="false" layoutX="72.0" layoutY="146.0" promptText="User to be deleted" visible="false" />
