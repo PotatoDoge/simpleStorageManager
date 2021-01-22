@@ -10,6 +10,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane fx:id="settingsPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="503.0" prefWidth="875.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SettingsController">
    <children>
@@ -58,5 +59,10 @@
       <ComboBox fx:id="positionComboBox" layoutX="304.0" layoutY="85.0" prefWidth="150.0" promptText="Position" visible="false" />
       <TextField fx:id="userToBeDeleted" focusTraversable="false" layoutX="72.0" layoutY="146.0" promptText="User to be deleted" visible="false" />
       <Button fx:id="deleteButton" layoutX="127.0" layoutY="349.0" mnemonicParsing="false" onAction="#deleteButtonAction" text="Delete" visible="false" />
+      <TextField fx:id="dateTextField" layoutX="72.0" layoutY="98.0" visible="false" />
+      <TextField fx:id="mxdTextField" layoutX="72.0" layoutY="185.0" promptText="MXN" visible="false" />
+      <Button fx:id="saveRateButton" layoutX="133.0" layoutY="275.0" mnemonicParsing="false" onAction="#saveRateButtonOnAction" text="Save" visible="false" />
+      <Text fx:id="usdEqualsText" layoutX="72.0" layoutY="172.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1 USD equals..." visible="false" wrappingWidth="121.7294921875" />
+      <Text fx:id="dateText" layoutX="78.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date:" visible="false" />
    </children>
 </AnchorPane>

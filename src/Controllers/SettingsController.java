@@ -3,19 +3,32 @@ package Controllers;
 import Users.Table;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SettingsController {
 
     private final ObservableList<String> positions = FXCollections.observableArrayList("Admin","Human Resources","Storage","Accounting");
-
+    @FXML
+    private Text dateText;
+    @FXML
+    private Text usdEqualsText;
+    @FXML
+    private Button saveRateButton;
+    @FXML
+    private TextField mxdTextField;
+    @FXML
+    private TextField dateTextField;
     @FXML
     private PasswordField loggedPasswordTextAreaDelete;
     @FXML
@@ -44,6 +57,8 @@ public class SettingsController {
     private TableView <Table>usersTable;
     @FXML
     private AnchorPane settingsPane;
+
+    private String currentDate;
 
     //Database's local URL
     static final String DB_URL = "jdbc:mysql://localhost/StorageManager?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
@@ -197,6 +212,18 @@ public class SettingsController {
         loggedPasswordTextAreaDelete.clear();
         loggedPasswordTextAreaDelete.setVisible(false);
         loggedPasswordTextAreaDelete.setFocusTraversable(false);
+        dateTextField.clear();
+        dateTextField.setVisible(false);
+        dateTextField.setFocusTraversable(false);
+        mxdTextField.clear();
+        mxdTextField.setVisible(false);
+        mxdTextField.setFocusTraversable(false);
+        saveRateButton.setVisible(false);
+        saveRateButton.setFocusTraversable(false);
+        usdEqualsText.setVisible(false);
+        usdEqualsText.setFocusTraversable(false);
+        dateText.setVisible(false);
+        dateText.setFocusTraversable(false);
     }
 
     /**
@@ -305,5 +332,42 @@ public class SettingsController {
 
     public void exchangeRateOnAction() {
         System.out.println("EXCHANGE PRESSED");
+        hideItems();
+        usdEqualsText.setVisible(true);
+        mxdTextField.setVisible(true);
+        saveRateButton.setVisible(true);
+        dateTextField.setVisible(true);
+        dateTextField.setEditable(false);
+        dateText.setVisible(true);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        currentDate = df.format(new Date());
+        dateTextField.setText(currentDate);
+    }
+
+    public void saveRateButtonOnAction(ActionEvent actionEvent) {
+        double amount = 0;
+        try{
+            amount = Double.parseDouble(mxdTextField.getText());
+            if(!(amount<100) || !(amount>0)){
+                popUpMessage("Not a valid amount.","The amount that you typed is\nnot valid.");
+            }
+            else{
+                try{
+                    conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                    stmt = conn.createStatement();
+                    int insertExchangeRate = stmt.executeUpdate("INSERT INTO exchangeRateUsd2Mxn (date,rate) VALUES('"+currentDate+"','"+amount+"')");
+                    System.out.println("Inserted successfully");
+                    popUpMessage("Successful!","Exchange rate set successfully!");
+                    conn.close();
+                }
+                catch (Exception e) {
+                    System.out.println("Error: "+e);
+                }
+            }
+        }catch (Exception e){
+            popUpMessage("Not a valid input.","You typed a not valid input.");
+        }
+
+
     }
 }
