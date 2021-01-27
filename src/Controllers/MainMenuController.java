@@ -10,6 +10,7 @@ import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.*;
 import java.util.ResourceBundle;
 
 public class MainMenuController implements Initializable {
@@ -18,6 +19,21 @@ public class MainMenuController implements Initializable {
     private Text userTextBox;
     @FXML
     private AnchorPane mainPane;
+
+    //Database's local URL
+    static final String DB_URL = "jdbc:mysql://localhost/StorageManager?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+
+    //User that accesses the Database
+    static final String USER = "root";
+
+    //Database's password
+    static final String PASS = "";
+
+    static Statement stmt = null;
+
+    static Connection conn = null;
+
+    static PreparedStatement pst = null;
 
     public void initialize(URL location, ResourceBundle resources){
         System.out.println("Loading resources");
@@ -39,13 +55,26 @@ public class MainMenuController implements Initializable {
 
     public void accountingOnAction(ActionEvent actionEvent) {
         System.out.println("ACCOUTING BUTTON PRESSED");
+        /*
+        THIS IS HOW YOU CREATE A TABLE IN JAVA
+        try {
+            String SQL = "CREATE TABLE prueba8(name VARCHAR(20))";
+            conn = DriverManager.getConnection(DB_URL,USER,PASS);
+            stmt = conn.createStatement();
+            stmt.executeUpdate(SQL);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+         */
+
     }
 
     public void hresourcesOnAction(ActionEvent actionEvent) {
         System.out.println("HHRR BUTTON PRESSED");
     }
 
-    public void storageOnAction(ActionEvent actionEvent) {
+    public void storageOnAction(ActionEvent actionEvent) throws IOException {
+        changeStage("/GUI/Storage.fxml");
         System.out.println("STORAGE BUTTON PRESSED");
     }
 
