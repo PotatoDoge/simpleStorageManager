@@ -215,6 +215,17 @@ public class Storage {
         }
     }
 
+    /**
+     * Method that creates the new product's table in the database and fills it up.
+     * @param tableName prtoduct table's name
+     * @param id product's id
+     * @param description product's description
+     * @param cost product's cost
+     * @param exchRate product's exchange rate at the moment of creating it
+     * @param currency product's currency
+     * @param unit product's unit
+     * @throws SQLException excpetion
+     */
     public void fillProductTable(String tableName,String id, String description,double cost, double exchRate, String currency,String unit) throws SQLException{
         String SQL = "INSERT into "+ tableName + "(id,description,cost,exchRate,currency,unit) VALUES('"+id+"','"+description+"','"+cost+"','"+exchRate+"','"+
                      currency+"','"+unit+"')";
@@ -242,7 +253,11 @@ public class Storage {
         return false;
     }
 
-
+    /**
+     * Method that gets the last exchangeRate saved in the DB
+     * @return last exchangeRate
+     * @throws SQLException exception
+     */
     public double getLastExchangeRate() throws  SQLException{
         double eR = 0;
         conn = DriverManager.getConnection(DB_URL,USER,PASS);
@@ -255,7 +270,6 @@ public class Storage {
         conn.close();
         return eR;
     }
-
 
     /**
      * Method that changes stage
