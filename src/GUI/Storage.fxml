@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane fx:id="inventoryPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="503.0" prefWidth="895.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Storage">
+   <children>
+      <MenuBar prefHeight="29.0" prefWidth="367.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Products">
+            <items>
+              <MenuItem  mnemonicParsing="false" onAction="#newItemOnAction" text="New Item" />
+                  <MenuItem mnemonicParsing="false" text="Edit Item" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Entries">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Outputs">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Reports">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Action 1" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Return">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#returnOnAction" text="Return" />
+              </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+      <Pane fx:id="newProductPane" layoutX="61.0" layoutY="52.0" prefHeight="382.0" prefWidth="539.0" visible="false">
+         <children>
+            <TextField fx:id="productIDTextField" layoutX="28.0" layoutY="32.0" promptText="Product ID" prefHeight="26.0" prefWidth="170.0"/>
+            <TextArea fx:id="descriptionTextArea" layoutX="270.0" layoutY="32.0" prefHeight="226.0" prefWidth="200.0" promptText="Description" />
+            <ComboBox fx:id="statusComboBox" layoutX="28.0" layoutY="96.0" prefHeight="26.0" prefWidth="170.0" promptText="Status" />
+            <TextField fx:id="costTextField" layoutX="28.0" layoutY="160.0" promptText="Cost" />
+            <ComboBox fx:id="currencyComboBox" layoutX="28.0" layoutY="224.0" prefHeight="26.0" prefWidth="170.0" promptText="Currency" />
+             <ComboBox fx:id="unitComboBox" layoutX="28.0" layoutY="288.0" prefWidth="170.0" promptText="UNIT" />
+             <Button fx:id="addButton" layoutX="208.0" layoutY="349.0" mnemonicParsing="false" onAction="#addButton" prefHeight="26.0" prefWidth="76.0" text="Add" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

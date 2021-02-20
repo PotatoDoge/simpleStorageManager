@@ -54,19 +54,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void accountingOnAction(ActionEvent actionEvent) {
-        System.out.println("ACCOUTING BUTTON PRESSED");
-        /*
-        THIS IS HOW YOU CREATE A TABLE IN JAVA
-        try {
-            String SQL = "CREATE TABLE prueba8(name VARCHAR(20))";
-            conn = DriverManager.getConnection(DB_URL,USER,PASS);
-            stmt = conn.createStatement();
-            stmt.executeUpdate(SQL);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-         */
-
+        System.out.println("ACCOUNTING BUTTON PRESSED");
     }
 
     public void hresourcesOnAction(ActionEvent actionEvent) {

@@ -62,7 +62,7 @@
       <TextField fx:id="dateTextField" layoutX="72.0" layoutY="98.0" visible="false" />
       <TextField fx:id="mxdTextField" layoutX="72.0" layoutY="185.0" promptText="MXN" visible="false" />
       <Button fx:id="saveRateButton" layoutX="133.0" layoutY="275.0" mnemonicParsing="false" onAction="#saveRateButtonOnAction" text="Save" visible="false" />
-      <Text fx:id="usdEqualsText" layoutX="72.0" layoutY="172.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1 USD equals...(MXN)" visible="false" wrappingWidth="121.7294921875" />
+      <Text fx:id="usdEqualsText" layoutX="72.0" layoutY="172.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1 USD equals...(MXN)" visible="false" />
       <Text fx:id="dateText" layoutX="78.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date:" visible="false" />
    </children>
 </AnchorPane>

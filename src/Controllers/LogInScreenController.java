@@ -12,6 +12,8 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class LogInScreenController {
 
@@ -80,6 +82,7 @@ public class LogInScreenController {
         }
         if(allowLogIn){
             try {
+                SettingsController.currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
                 changeStage();
             } catch (IOException e) {
                 e.printStackTrace();

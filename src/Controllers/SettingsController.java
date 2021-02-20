@@ -58,7 +58,7 @@ public class SettingsController {
     @FXML
     private AnchorPane settingsPane;
 
-    private String currentDate;
+    static String currentDate;
 
     //Database's local URL
     static final String DB_URL = "jdbc:mysql://localhost/StorageManager?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
@@ -115,7 +115,7 @@ public class SettingsController {
             popUpMessage("Not a valid user/password","The logged username or password\nis not correct.");
         }
         else if(!checkIfUsernameInDB(newUserTextField.getText())){
-            popUpMessage("Not a valid username","That username already exists.\nChoose exit;a different one.");
+            popUpMessage("Not a valid username","That username already exists.\nChoose a different one.");
         }
         else if(positionComboBox.getValue() == null){
             popUpMessage("Not a valid position","Select a valid position");
@@ -367,7 +367,6 @@ public class SettingsController {
         }catch (Exception e){
             popUpMessage("Not a valid input.","You typed a not valid input.");
         }
-
-
     }
+
 }
