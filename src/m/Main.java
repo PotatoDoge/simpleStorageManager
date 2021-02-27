@@ -21,7 +21,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         try{
             Class.forName(JDBC_DRIVER);
-            System.out.println("A CONNECTION WITH THE DATABASE HAS BEEN ESTABLISHED");
+            System.out.println("A CONNECTION WITH THE DATABASE IS TRYING TO BE ESTABLISHED");
             Parent root= FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("GUI/LogInScreen.fxml")));
             primaryStage.setTitle("Storage Manager");
             primaryStage.setScene(new Scene(root));
