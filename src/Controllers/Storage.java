@@ -51,10 +51,12 @@ public class Storage {
 
     static PreparedStatement pst = null;
 
+    // HERE STARTS THE PART THAT MANAGES THE "NEW PRODUCT" MODULE'S LOGIC
     /**
      * Method that inserts into the DB the product to be created.
      * @param actionEvent button pressed
      */
+    // ADD THE DATE IN WHICH IT WAS REGISTERED (ADD IT IN THE product_name database)
     public void addButton(ActionEvent actionEvent) throws SQLException {
         if(!productIDTextField.getText().isEmpty() && !(productIDTextField.getText().length()>24) &&
                 !costTextField.getText().isEmpty() && !(statusComboBox.getValue() == null) && !(currencyComboBox.getValue() == null) &&
@@ -73,8 +75,20 @@ public class Storage {
                     conn.close();
                     popUpMessage("Product added correctly!","The product has been added to the\nlist of products.");
                     fillProductTable(tableName,productIDTextField.getText(),descriptionTextArea.getText(),Double.parseDouble(costTextField.getText()),getLastExchangeRate(),currencyComboBox.getValue(),unitComboBox.getValue());
-                    System.out.println(checkLastExchangeRateDate());
-                    addProductToDB(productIDTextField.getText(),0,statusComboBox.getValue(), Double.parseDouble(costTextField.getText()));
+                    addProductToDB(productIDTextField.getText(),0,statusComboBox.getValue(), Double.parseDouble(costTextField.getText()),unitComboBox.getValue());
+                    // NEXT LINES CLEAN THE FIELDS AND COMBO BOXES
+                    productIDTextField.setFocusTraversable(false);
+                    productIDTextField.clear();
+                    statusComboBox.setFocusTraversable(false);
+                    statusComboBox.setItems(null);
+                    costTextField.setFocusTraversable(false);
+                    costTextField.clear();
+                    currencyComboBox.setFocusTraversable(false);
+                    currencyComboBox.setItems(null);
+                    unitComboBox.setFocusTraversable(false);
+                    unitComboBox.setItems(null);
+                    descriptionTextArea.setFocusTraversable(false);
+                    descriptionTextArea.clear();
                 }
                 catch (SQLException throwables) {
                     throwables.printStackTrace();
@@ -189,13 +203,13 @@ public class Storage {
      * @param price price
      * @throws SQLException exception
      */
-    public void addProductToDB(String id, int qty,String status, double price) throws SQLException {
+    public void addProductToDB(String id, int qty,String status, double price, String unit) throws SQLException {
         char s;
         if(status.equals("Inactive")){ s = 'I'; }
         else{ s = 'A';}
         conn = DriverManager.getConnection(DB_URL,USER,PASS);
         stmt = conn.createStatement();
-        stmt.executeUpdate("INSERT INTO products(id,qty,status,lastPrice) VALUES('"+id+"','"+qty+"','"+s+"','"+price+"')");
+        stmt.executeUpdate("INSERT INTO products(id,qty,status,lastPrice,lastUnit) VALUES('"+id+"','"+qty+"','"+s+"','"+price+"','"+unit+"')");
         conn.close();
         System.out.println("Product added successfully to products DB");
     }
@@ -224,7 +238,7 @@ public class Storage {
      * @param exchRate product's exchange rate at the moment of creating it
      * @param currency product's currency
      * @param unit product's unit
-     * @throws SQLException excpetion
+     * @throws SQLException exception
      */
     public void fillProductTable(String tableName,String id, String description,double cost, double exchRate, String currency,String unit) throws SQLException{
         String SQL = "INSERT into "+ tableName + "(id,description,cost,exchRate,currency,unit) VALUES('"+id+"','"+description+"','"+cost+"','"+exchRate+"','"+
@@ -288,5 +302,11 @@ public class Storage {
      */
     public void returnOnAction(ActionEvent actionEvent) throws IOException {
         changeStage("/GUI/MainMenu.fxml");
+    }
+
+    // HERE ENDS THE PART THAT MANAGES THE "NEW PRODUCT" MODULE'S LOGIC
+
+    // HERE STARTS THE PART THAT MANAGES THE "EDIT PRODUCT" MODULE'S LOGIC
+    public void editItemOnAction(ActionEvent actionEvent) {
     }
 }
