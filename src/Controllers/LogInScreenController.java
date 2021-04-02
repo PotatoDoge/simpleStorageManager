@@ -1,7 +1,6 @@
 package Controllers;
 
 import Users.User;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
@@ -12,10 +11,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
+import javax.swing.plaf.nimbus.State;
+import java.io.*;
 
-import java.io.IOException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 public class LogInScreenController {
@@ -29,7 +30,11 @@ public class LogInScreenController {
     @FXML
     private PasswordField passwordTextArea;
 
-    static final String DB_URL = "jdbc:mysql://localhost/StorageManager?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+    static String SQLTable = "mysql";
+
+    static final String databaseName = "StorageManager";
+
+    static String DB_URL = "jdbc:mysql://localhost/"+SQLTable+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 
     static final String USER = "root";
 
@@ -48,11 +53,23 @@ public class LogInScreenController {
     /**
      * Method that checks with the DB if the user and password inputted are correct.
      */
-    public void logIn() {
+    public void logIn() throws Exception {
         if(passwordTextArea.getText().isEmpty() || usernameTextArea.getText().isEmpty()){
             popUpMessage("Fill everything","All fields must be filled to proceed");
         }
         else{
+            if(!checkIfDbExists()){
+                try {
+                    //SCRIPT THAT WILL RUN THE FIRST TIME THE PROGRAM RUNS
+                    runSQLScript("src/SQLFILES/initialSetUP.sql");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            else{
+                SQLTable = "StorageManager";
+                DB_URL = "jdbc:mysql://localhost/"+databaseName+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+            }
             String pass = passwordTextArea.getText();
             try{
                 conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -79,6 +96,7 @@ public class LogInScreenController {
                 conn.close();
             }
             catch (Exception e){
+                System.out.println("AQUI");
                 System.out.println(e);
             }
         }
@@ -114,9 +132,54 @@ public class LogInScreenController {
         }
     }
 
-    public void passwordPressed(KeyEvent keyEvent) {
+    public void passwordPressed(KeyEvent keyEvent) throws Exception {
         if(keyEvent.getCode() == KeyCode.ENTER){
             logIn();
         }
+    }
+
+    public boolean checkIfDbExists() throws ClassNotFoundException, SQLException {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+
+        Connection con = DriverManager.getConnection(DB_URL,USER,PASS);
+
+        ResultSet resultSet = con.getMetaData().getCatalogs();
+
+        //iterate each catalog in the ResultSet
+
+        while (resultSet.next()) {
+
+            // Get the database name, which is at position 1
+            String dbName = resultSet.getString(1);
+            if(dbName.equals(databaseName)) return true;
+        }
+        return false;
+    }
+
+    public void runSQLScript(String script) throws Exception {
+        System.out.println("Executing SQL script......");
+        Connection c = DriverManager.getConnection(DB_URL,USER,PASS);
+        Statement st = c.createStatement();
+        String s = "";
+        StringBuilder sb = new StringBuilder();
+        try
+        {
+            File file = new File(script);
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+            while((s = br.readLine()) != null)
+            {
+                sb.append(s);
+            }
+            br.close();
+            String[] inst = sb.toString().split(";");
+            for (String value : inst) {
+                st.executeUpdate(value);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("SQL script execution done.");
     }
 }
