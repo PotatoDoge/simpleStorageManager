@@ -75,6 +75,7 @@ public class Storage {
                     conn.close();
                     popUpMessage("Product added correctly!","The product has been added to the\nlist of products.");
                     fillProductTable(tableName,productIDTextField.getText(),descriptionTextArea.getText(),Double.parseDouble(costTextField.getText()),getLastExchangeRate(),currencyComboBox.getValue(),unitComboBox.getValue());
+
                     addProductToDB(productIDTextField.getText(),0,statusComboBox.getValue(), Double.parseDouble(costTextField.getText()),unitComboBox.getValue());
                     // NEXT LINES CLEAN THE FIELDS AND COMBO BOXES
                     productIDTextField.setFocusTraversable(false);

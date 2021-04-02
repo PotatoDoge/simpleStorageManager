@@ -8,7 +8,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+
 
 import java.io.IOException;
 import java.sql.*;
@@ -30,7 +33,7 @@ public class LogInScreenController {
 
     static final String USER = "root";
 
-    static final String PASS = "";
+    static final String PASS = "02082001";
 
     static Statement stmt = null;
 
@@ -44,9 +47,8 @@ public class LogInScreenController {
 
     /**
      * Method that checks with the DB if the user and password inputted are correct.
-     * @param event button clicked
      */
-    public void logIn(ActionEvent event) {
+    public void logIn() {
         if(passwordTextArea.getText().isEmpty() || usernameTextArea.getText().isEmpty()){
             popUpMessage("Fill everything","All fields must be filled to proceed");
         }
@@ -104,5 +106,17 @@ public class LogInScreenController {
     public void changeStage() throws IOException {
         AnchorPane pane = FXMLLoader.load(getClass().getResource("/GUI/MainMenu.fxml"));
         logInPane.getChildren().setAll(pane);
+    }
+
+    public void usernamePressed(KeyEvent keyEvent) {
+        if(keyEvent.getCode() == KeyCode.ENTER){
+            passwordTextArea.requestFocus();
+        }
+    }
+
+    public void passwordPressed(KeyEvent keyEvent) {
+        if(keyEvent.getCode() == KeyCode.ENTER){
+            logIn();
+        }
     }
 }

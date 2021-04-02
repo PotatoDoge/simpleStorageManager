@@ -27,7 +27,7 @@ public class MainMenuController implements Initializable {
     static final String USER = "root";
 
     //Database's password
-    static final String PASS = "";
+    static final String PASS = "02082001";
 
     static Statement stmt = null;
 
