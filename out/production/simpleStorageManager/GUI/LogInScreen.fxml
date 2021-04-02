@@ -14,8 +14,8 @@
             <Font name="Umpush Bold" size="46.0" />
          </font>
       </Text>
-      <TextField fx:id="usernameTextArea" layoutX="344.0" layoutY="203.0" prefHeight="35.0" prefWidth="209.0" promptText="Username" />
-      <PasswordField fx:id="passwordTextArea" layoutX="343.0" layoutY="271.0" prefHeight="35.0" prefWidth="209.0" promptText="Password" />
+      <TextField fx:id="usernameTextArea" layoutX="344.0" layoutY="203.0" onKeyPressed="#usernamePressed" prefHeight="35.0" prefWidth="209.0" promptText="Username" />
+      <PasswordField fx:id="passwordTextArea" layoutX="343.0" layoutY="271.0" onKeyPressed="#passwordPressed" prefHeight="35.0" prefWidth="209.0" promptText="Password" />
       <Button fx:id="logInButton" layoutX="393.0" layoutY="380.0" mnemonicParsing="false" onAction="#logIn" prefHeight="35.0" prefWidth="110.0" text="Log In" />
    </children>
 </AnchorPane>
