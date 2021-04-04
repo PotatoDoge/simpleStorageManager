@@ -34,9 +34,9 @@ public class LogInScreenController {
 
     static final String databaseName = "StorageManager";
 
-    static String DB_URL = "jdbc:mysql://localhost/"+SQLTable+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+    static String DB_URL = "jdbc:mysql://192.168.86.79/"+SQLTable+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 
-    static final String USER = "root";
+    static final String USER = "bfp";
 
     static final String PASS = "02082001";
 
