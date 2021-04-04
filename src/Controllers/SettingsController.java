@@ -64,10 +64,10 @@ public class SettingsController {
     private final String DB_URL = LogInScreenController.DB_URL;
 
     //User that accesses the Database
-    static final String USER = "root";
+    private final String USER = LogInScreenController.USER;
 
     //Database's password1
-    static final String PASS = "02082001";
+    private final String PASS = LogInScreenController.PASS;
 
     static Statement stmt = null;
 
