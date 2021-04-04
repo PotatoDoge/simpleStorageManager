@@ -61,7 +61,7 @@ public class SettingsController {
     static String currentDate;
 
     //Database's local URL
-    static final String DB_URL = "jdbc:mysql://localhost/StorageManager?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+    private final String DB_URL = LogInScreenController.DB_URL;
 
     //User that accesses the Database
     static final String USER = "root";
