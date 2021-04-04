@@ -37,13 +37,13 @@ public class Storage {
     private Pane newProductPane;
 
     //Database's local URL
-    static final String DB_URL = "jdbc:mysql://localhost/StorageManager?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+    private final String DB_URL = LogInScreenController.DB_URL;
 
     //User that accesses the Database
-    static final String USER = "root";
+    private final String USER = LogInScreenController.USER;
 
-    //Database's password
-    static final String PASS = "02082001";
+    //Database's password1
+    private final String PASS = LogInScreenController.PASS;
 
     static Statement stmt = null;
 
