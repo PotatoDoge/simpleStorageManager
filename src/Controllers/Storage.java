@@ -43,7 +43,7 @@ public class Storage {
     static final String USER = "root";
 
     //Database's password
-    static final String PASS = "";
+    static final String PASS = "02082001";
 
     static Statement stmt = null;
 
@@ -122,7 +122,6 @@ public class Storage {
                 popUpMessage("Unit not selected.","A unit must be select in order to\nregister this product.");
             }
         }
-
     }
 
     /**
@@ -252,7 +251,7 @@ public class Storage {
 
     /**
      * Method that checks if an exchange rate has been declared today.
-     * @return true if they have , else false
+     * @return true if it has , else false
      */
     public boolean checkLastExchangeRateDate() throws SQLException {
         conn = DriverManager.getConnection(DB_URL,USER,PASS);
@@ -264,7 +263,6 @@ public class Storage {
             if(SettingsController.currentDate.equals(rs.getString("date"))) return true;
         }
         conn.close();
-        System.out.println(SettingsController.currentDate);
         return false;
     }
 

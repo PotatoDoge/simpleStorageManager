@@ -62,14 +62,15 @@ public class LogInScreenController {
                 try {
                     //SCRIPT THAT WILL RUN THE FIRST TIME THE PROGRAM RUNS
                     runSQLScript("src/SQLFILES/initialSetUP.sql");
+                    runSQLScript("src/SQLFILES/addingAdmin.sql");
+                    popUpMessage("Database created","Resources loaded.");
                 } catch (Exception e) {
+                    popUpMessage("Error","Could not connect to database.");
                     e.printStackTrace();
                 }
             }
-            else{
-                SQLTable = "StorageManager";
-                DB_URL = "jdbc:mysql://localhost/"+databaseName+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-            }
+            SQLTable = "StorageManager";
+            DB_URL = "jdbc:mysql://localhost/"+SQLTable+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
             String pass = passwordTextArea.getText();
             try{
                 conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -96,13 +97,13 @@ public class LogInScreenController {
                 conn.close();
             }
             catch (Exception e){
-                System.out.println("AQUI");
                 System.out.println(e);
             }
         }
         if(allowLogIn){
             try {
-                SettingsController.currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+                SettingsController.currentDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
+                registerLog(user.getName(), SettingsController.currentDate);
                 changeStage();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -138,17 +139,11 @@ public class LogInScreenController {
         }
     }
 
-    public boolean checkIfDbExists() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-
+    public boolean checkIfDbExists() throws SQLException {
         Connection con = DriverManager.getConnection(DB_URL,USER,PASS);
-
         ResultSet resultSet = con.getMetaData().getCatalogs();
 
-        //iterate each catalog in the ResultSet
-
         while (resultSet.next()) {
-
             // Get the database name, which is at position 1
             String dbName = resultSet.getString(1);
             if(dbName.equals(databaseName)) return true;
@@ -181,5 +176,12 @@ public class LogInScreenController {
             e.printStackTrace();
         }
         System.out.println("SQL script execution done.");
+    }
+
+    public void registerLog(String user, String date) throws SQLException {
+        conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        stmt = conn.createStatement();
+        int insertExchangeRate = stmt.executeUpdate("INSERT INTO logs (user,loggedIn) VALUES('"+user+"','"+date+"')");
+        conn.close();
     }
 }
