@@ -70,7 +70,7 @@ public class LogInScreenController {
                 }
             }
             SQLTable = "StorageManager";
-            DB_URL = "jdbc:mysql://localhost/"+SQLTable+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+            DB_URL = "jdbc:mysql://192.168.86.79:3306/"+SQLTable+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
             String pass = passwordTextArea.getText();
             try{
                 conn = DriverManager.getConnection(DB_URL, USER, PASS);
