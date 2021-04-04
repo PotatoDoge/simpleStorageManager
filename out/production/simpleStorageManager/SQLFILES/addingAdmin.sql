@@ -1,0 +1,1 @@
+INSERT INTO  StorageManager.users(user,password,position) VALUES ("admin","1","Admin");
