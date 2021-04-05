@@ -2,7 +2,6 @@ package Controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -54,10 +53,8 @@ public class Storage {
     // HERE STARTS THE PART THAT MANAGES THE "NEW PRODUCT" MODULE'S LOGIC
     /**
      * Method that inserts into the DB the product to be created.
-     * @param actionEvent button pressed
      */
-    // ADD THE DATE IN WHICH IT WAS REGISTERED (ADD IT IN THE product_name database)
-    public void addButton(ActionEvent actionEvent) throws SQLException {
+    public void addButton() throws SQLException {
         if(!productIDTextField.getText().isEmpty() && !(productIDTextField.getText().length()>24) &&
                 !costTextField.getText().isEmpty() && !(statusComboBox.getValue() == null) && !(currencyComboBox.getValue() == null) &&
                 !(descriptionTextArea.getText().length()>100) && !descriptionTextArea.getText().isEmpty() && isNumeric(costTextField.getText()) &&
@@ -66,17 +63,10 @@ public class Storage {
                 popUpMessage("Product ID already registered","This product ID has already been registered to\nthe database.");
             }
             else{
-                String tableName = "product_"+productIDTextField.getText();
                 try {
-                    String SQL = "CREATE TABLE "+tableName+"(id VARCHAR(22), description VARCHAR(100), cost REAL, exchRate REAL, currency VARCHAR(6), unit VARCHAR(7))";
-                    conn = DriverManager.getConnection(DB_URL,USER,PASS);
-                    stmt = conn.createStatement();
-                    stmt.executeUpdate(SQL);
-                    conn.close();
                     popUpMessage("Product added correctly!","The product has been added to the\nlist of products.");
-                    fillProductTable(tableName,productIDTextField.getText(),descriptionTextArea.getText(),Double.parseDouble(costTextField.getText()),getLastExchangeRate(),currencyComboBox.getValue(),unitComboBox.getValue());
+                    addProductToDB(productIDTextField.getText(),descriptionTextArea.getText(), Double.parseDouble(costTextField.getText()),statusComboBox.getValue(),unitComboBox.getValue());
 
-                    addProductToDB(productIDTextField.getText(),0,statusComboBox.getValue(), Double.parseDouble(costTextField.getText()),unitComboBox.getValue());
                     // NEXT LINES CLEAN THE FIELDS AND COMBO BOXES
                     productIDTextField.setFocusTraversable(false);
                     productIDTextField.clear();
@@ -197,19 +187,24 @@ public class Storage {
 
     /**
      * Method that adds products to the main products database.
-     * @param id id
-     * @param qty qty
-     * @param status status
-     * @param price price
+     * @param id product's id
+     * @param description product's description
+     * @param cost product's cost
+     * @param status product's status
+     * @param unit product's unit
      * @throws SQLException exception
      */
-    public void addProductToDB(String id, int qty,String status, double price, String unit) throws SQLException {
-        char s;
-        if(status.equals("Inactive")){ s = 'I'; }
-        else{ s = 'A';}
+    public void addProductToDB(String id, String description, double cost, String status, String unit) throws SQLException {
+        String s = "";
+        if(status.equals("Inactive")){
+            s = "I";
+        }
+        else{
+            s = "A";
+        }
         conn = DriverManager.getConnection(DB_URL,USER,PASS);
         stmt = conn.createStatement();
-        stmt.executeUpdate("INSERT INTO products(id,qty,status,lastPrice,lastUnit) VALUES('"+id+"','"+qty+"','"+s+"','"+price+"','"+unit+"')");
+        stmt.executeUpdate("INSERT INTO productsList(id,description,lastCost,status,unit) VALUES('"+id+"','"+description+"','"+cost+"','"+s+"','"+unit+"')");
         conn.close();
         System.out.println("Product added successfully to products DB");
     }
@@ -231,7 +226,7 @@ public class Storage {
 
     /**
      * Method that creates the new product's table in the database and fills it up.
-     * @param tableName prtoduct table's name
+     * @param tableName product table's name
      * @param id product's id
      * @param description product's description
      * @param cost product's cost
@@ -260,7 +255,11 @@ public class Storage {
         pst = conn.prepareStatement(SQL);
         ResultSet rs = pst.executeQuery();
         if(rs.next()){
-            if(SettingsController.currentDate.equals(rs.getString("date"))) return true;
+            System.out.println(rs.getString("date"));
+            System.out.println(LogInScreenController.currentDate);
+            if(LogInScreenController.currentDate.equals(rs.getString("date"))){
+                return true;
+            }
         }
         conn.close();
         return false;
@@ -296,16 +295,15 @@ public class Storage {
 
     /**
      * When return button is clicked, the system returns to the main menu
-     * @param actionEvent button pressed
      * @throws IOException exception
      */
-    public void returnOnAction(ActionEvent actionEvent) throws IOException {
+    public void returnOnAction() throws IOException {
         changeStage("/GUI/MainMenu.fxml");
     }
 
     // HERE ENDS THE PART THAT MANAGES THE "NEW PRODUCT" MODULE'S LOGIC
 
     // HERE STARTS THE PART THAT MANAGES THE "EDIT PRODUCT" MODULE'S LOGIC
-    public void editItemOnAction(ActionEvent actionEvent) {
+    public void editItemOnAction() {
     }
 }

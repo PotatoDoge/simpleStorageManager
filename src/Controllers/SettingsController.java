@@ -58,8 +58,6 @@ public class SettingsController {
     @FXML
     private AnchorPane settingsPane;
 
-    static String currentDate;
-
     //Database's local URL
     private final String DB_URL = LogInScreenController.DB_URL;
 
@@ -340,8 +338,8 @@ public class SettingsController {
         dateTextField.setEditable(false);
         dateText.setVisible(true);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        currentDate = df.format(new Date());
-        dateTextField.setText(currentDate);
+        LogInScreenController.currentDate = df.format(new Date());
+        dateTextField.setText(LogInScreenController.currentDate);
     }
 
     public void saveRateButtonOnAction(ActionEvent actionEvent) {
@@ -355,7 +353,7 @@ public class SettingsController {
                 try{
                     conn = DriverManager.getConnection(DB_URL, USER, PASS);
                     stmt = conn.createStatement();
-                    int insertExchangeRate = stmt.executeUpdate("INSERT INTO exchangeRateUsd2Mxn (date,rate) VALUES('"+currentDate+"','"+amount+"')");
+                    stmt.executeUpdate("INSERT INTO exchangeRateUsd2Mxn (date,rate) VALUES('"+LogInScreenController.currentDate+"','"+amount+"')");
                     System.out.println("Inserted successfully");
                     popUpMessage("Successful!","Exchange rate set successfully!");
                     conn.close();

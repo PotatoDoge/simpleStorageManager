@@ -50,6 +50,8 @@ public class LogInScreenController {
 
     static User user = new User();
 
+    static String currentDate;
+
     /**
      * Method that checks with the DB if the user and password inputted are correct.
      */
@@ -102,8 +104,9 @@ public class LogInScreenController {
         }
         if(allowLogIn){
             try {
-                SettingsController.currentDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
-                registerLog(user.getName(), SettingsController.currentDate);
+                currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+                String logInDateTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
+                registerLog(user.getName(), logInDateTime);
                 changeStage();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -181,7 +184,7 @@ public class LogInScreenController {
     public void registerLog(String user, String date) throws SQLException {
         conn = DriverManager.getConnection(DB_URL, USER, PASS);
         stmt = conn.createStatement();
-        int insertExchangeRate = stmt.executeUpdate("INSERT INTO logs (user,loggedIn) VALUES('"+user+"','"+date+"')");
+        stmt.executeUpdate("INSERT INTO logs (user,loggedIn) VALUES('"+user+"','"+date+"')");
         conn.close();
     }
 }
